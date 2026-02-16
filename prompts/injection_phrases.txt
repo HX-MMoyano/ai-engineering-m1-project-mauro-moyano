@@ -1,0 +1,5 @@
+# Frases de secuestro / prompt injection (una por línea).
+# Si el usuario escribe alguna de estas (como substring), se bloquea la consulta.
+# Líneas vacías o que empiezan con # se ignoran.
+# Puedes añadir más frases aquí.
+

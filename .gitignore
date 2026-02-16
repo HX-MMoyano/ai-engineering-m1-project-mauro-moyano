@@ -1,0 +1,47 @@
+# Byte-compiled / optimized
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Distribution
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Tests / coverage
+htmlcov/
+.coverage
+.coverage.*
+.pytest_cache/
+.tox/
+.nox/
+
+# Environments
+.venv/
+venv/
+env/
+
+# UV
+.uv/
+
+# IDE
+.idea/
+.vscode/
+
+# Ruff
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db

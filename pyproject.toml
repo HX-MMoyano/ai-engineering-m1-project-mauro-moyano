@@ -1,0 +1,28 @@
+[project]
+name = "m1-project-mauro-moyano"
+version = "0.1.0"
+description = "Proyecto M1 - Mauro Moyano"
+requires-python = ">=3.10"
+dependencies = [
+  "openai>=1.60.0",
+  "langchain>=0.3.0",
+  "langchain-openai>=0.2.0",
+  "python-dotenv>=1.0.1",
+  "pytest>=8.3.0",
+  "pytest-cov>=4.1.0",
+  "pydantic>=2.0.0",
+  "ruff>=0.8.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = ["-v", "--strict-markers"]
+
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel"]
+build-backend = "setuptools.build_meta"

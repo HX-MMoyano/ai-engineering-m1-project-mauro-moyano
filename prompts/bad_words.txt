@@ -1,0 +1,4 @@
+# Lista de palabras a filtrar (una por línea). Líneas vacías y las que empiezan con # se ignoran.
+# Añade aquí las palabras que quieras bloquear (español/inglés).
+# Ejemplo (sustituir por tu lista real):
+

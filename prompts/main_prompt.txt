@@ -1,0 +1,10 @@
+# Prompt layout (anti prompt-injection)
+
+- System instructions (role, schema, few-shot): prompts/system_prompt.txt
+- User input: passed separately as the "user" message in the API (see src/run_query.py).
+
+The model receives:
+  1. role=system, content=<contents of system_prompt.txt>
+  2. role=user,   content=<raw question only>
+
+So user input is never concatenated into the system prompt.

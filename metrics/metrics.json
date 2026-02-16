@@ -1,0 +1,62 @@
+[
+  {
+    "timestamp": "2026-02-16T22:29:14.599780Z",
+    "tokens_prompt": 367,
+    "tokens_completion": 70,
+    "total_tokens": 437,
+    "latency_ms": 7699,
+    "estimated_cost_usd": 9.7e-05
+  },
+  {
+    "timestamp": "2026-02-16T22:31:13.421316Z",
+    "tokens_prompt": 366,
+    "tokens_completion": 80,
+    "total_tokens": 446,
+    "latency_ms": 2153,
+    "estimated_cost_usd": 0.000103
+  },
+  {
+    "timestamp": "2026-02-16T22:40:20.270354Z",
+    "tokens_prompt": 366,
+    "tokens_completion": 79,
+    "total_tokens": 445,
+    "latency_ms": 2156,
+    "estimated_cost_usd": 0.000102
+  },
+  {
+    "timestamp": "2026-02-16T22:40:38.423781Z",
+    "tokens_prompt": 0,
+    "tokens_completion": 0,
+    "total_tokens": 0,
+    "latency_ms": 0,
+    "estimated_cost_usd": 0.0,
+    "blocked": true
+  },
+  {
+    "timestamp": "2026-02-16T22:43:30.996067Z",
+    "tokens_prompt": 0,
+    "tokens_completion": 0,
+    "total_tokens": 0,
+    "latency_ms": 0,
+    "estimated_cost_usd": 0.0,
+    "blocked": true
+  },
+  {
+    "timestamp": "2026-02-16T22:43:53.783386Z",
+    "tokens_prompt": 366,
+    "tokens_completion": 81,
+    "total_tokens": 447,
+    "latency_ms": 3168,
+    "estimated_cost_usd": 0.000103
+  },
+  {
+    "request_id": "204f3f6792364172b10848b1562f3c2e",
+    "question_hash": "ba2ec98dfd319def",
+    "timestamp": "2026-02-16T22:46:16.318774Z",
+    "tokens_prompt": 366,
+    "tokens_completion": 71,
+    "total_tokens": 437,
+    "latency_ms": 2492,
+    "estimated_cost_usd": 9.7e-05
+  }
+]
