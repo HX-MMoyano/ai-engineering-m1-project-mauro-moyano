@@ -1,101 +1,74 @@
 # M1 Project - Mauro Moyano (M1PI)
 
-Asistente para agentes de soporte al cliente: recibe una pregunta y devuelve JSON con respuesta, confianza y acciones recomendadas, más métricas (tokens, latencia, costo estimado).
-
-## Requisitos
-
-- Python >= 3.10
-- [uv](https://docs.astral.sh/uv/) (gestor de dependencias y entornos)
-
-## Setup
-
-```bash
-# Instalar uv (si no lo tienes)
-# Windows (PowerShell): irm https://astral.sh/uv/install.ps1 | iex
-
-# Clonar / entrar al repo y instalar dependencias
-make install
-
-# Configurar API key (obligatorio para ejecutar consultas)
-cp .env.example .env
-# Editar .env y setear OPENAI_API_KEY=sk-...
-```
-
-## Variables de entorno
-
-| Variable         | Descripción                          |
-|------------------|--------------------------------------|
-| `OPENAI_API_KEY` | API key de OpenAI (requerida)        |
-| `OPENAI_MODEL`   | Modelo a usar (default: gpt-4o-mini) |
+Asistente para soporte al cliente: recibe una pregunta y devuelve JSON (`answer`, `confidence`, `actions`) más métricas por ejecución.
 
 ## Cómo ejecutar
 
+**Requisitos:** Python ≥ 3.10, [uv](https://docs.astral.sh/uv/)
+
 ```bash
-# Ejecutar con pregunta de ejemplo
+# 1. Clonar y entrar al repo
+cd ai-engineering-m1-project-mauro-moyano
+
+# 2. Instalar dependencias
+make install
+
+# 3. Configurar API key (obligatorio)
+cp .env.example .env
+# Editar .env y poner tu OPENAI_API_KEY=sk-...
+
+# 4. Ejecutar
 make run
-
-# Ejecutar con tu pregunta
-make run-query QUESTION="How do I cancel my subscription?"
-# En Windows (bash): make run-query QUESTION="How do I cancel?"
 ```
 
-O directamente:
-
+**Otra pregunta:**
 ```bash
-uv run python -m src.run_query "Your question here"
-echo "Your question" | uv run python -m src.run_query
+make run-query QUESTION="How do I cancel my subscription?"
+# O: uv run python -m src.run_query "Tu pregunta"
 ```
 
-La salida es JSON en stdout (answer, confidence, actions). Las métricas se imprimen en stderr y se **append** en `metrics/metrics.json`.
+Salida: JSON en pantalla; métricas en `metrics/metrics.json`.
 
-## Cómo reproducir métricas
+## Variables de entorno
 
-1. Ejecutar al menos una consulta: `make run` o `make run-query QUESTION="..."`.
-2. Abrir `metrics/metrics.json`. Cada ejecución añade un objeto con:
-   - **`request_id`**: UUID en hex (32 caracteres), único por ejecución. Sirve para identificar esta fila en logs sin guardar la pregunta.
-   - **`question_hash`**: Primeros 16 caracteres del SHA256 de la pregunta. Misma pregunta → mismo hash (agrupar métricas por pregunta). No permite recuperar el texto (más seguro que guardar la pregunta).
-   - `timestamp`, `tokens_prompt`, `tokens_completion`, `total_tokens`, `latency_ms`, `estimated_cost_usd` (y `blocked` si fue filtrada).
-
-Para varias ejecuciones, el archivo es un JSON array; la primera vez que corras el script se creará el archivo.
+| Variable         | Uso                          |
+|------------------|------------------------------|
+| `OPENAI_API_KEY` | Obligatoria                  |
+| `OPENAI_MODEL`   | Opcional (default: gpt-4o-mini) |
 
 ## Tests
 
 ```bash
 make test
-# o
-uv run pytest tests/ -v
 ```
 
-Incluye `tests/test_core.py`: validación del esquema JSON de respuesta, estimación de costo por tokens y sustitución del prompt. No se llama a la API en los tests.
-
-## Estructura del repositorio
+## Estructura del proyecto
 
 ```
 .
-├── pyproject.toml
-├── Makefile
-├── README.md
-├── .env.example
+├── pyproject.toml          # Dependencias
+├── Makefile                # install, run, run-query, test
+├── .env.example             # Plantilla (copiar a .env)
 ├── prompts/
-│   └── main_prompt.txt    # Prompt con few-shot y esquema JSON
+│   ├── system_prompt.txt   # Instrucciones + few-shot (rol system)
+│   ├── main_prompt.txt     # Notas sobre separación system/user
+│   ├── bad_words.txt       # Palabras a filtrar (opcional)
+│   └── injection_phrases.txt  # Frases de secuestro (opcional)
 ├── src/
-│   └── run_query.py       # Script ejecutable: pregunta → JSON + métricas
+│   ├── run_query.py        # Entrada → OpenAI → JSON + métricas
+│   └── safety.py           # Filtro malas palabras e inyección
 ├── metrics/
-│   └── metrics.json       # Generado al ejecutar (timestamp, tokens, latency, cost)
+│   └── metrics.json        # Por ejecución: request_id, question_hash, tokens, latency_ms, cost, blocked
 ├── reports/
-│   └── PI_report_en.md    # Informe breve (arquitectura, prompting, métricas)
+│   └── PI_report_en.md    # Informe (arquitectura, prompting, métricas)
 └── tests/
-    ├── test_core.py       # Tests de esquema y helpers
-    └── test_example.py
+    ├── test_core.py        # Esquema JSON, costo, prompt
+    └── test_safety.py      # Filtros y fallback
 ```
 
-## Limitaciones conocidas
-
-- El costo estimado usa precios aproximados para gpt-4o-mini; puede variar según modelo y precios actuales de OpenAI.
-- Una sola llamada por ejecución; no hay cola ni reintentos automáticos.
-- El prompt está en inglés; las preguntas en español pueden funcionar pero los ejemplos few-shot están en inglés.
-- No hay moderación ni fallback para prompts adversariales (opcional/bonus).
+- **Métricas:** cada fila tiene `request_id` (único) y `question_hash` (agrupar por misma pregunta sin guardar el texto).
+- **Seguridad:** entradas con malas palabras o frases de inyección (ej. "olvida tus instrucciones") devuelven un fallback y se registran con `blocked: true`; no se llama al LLM.
 
 ## Informe
 
-Ver `reports/PI_report_en.md` para arquitectura, técnica de prompting elegida, métricas de ejemplo y trade-offs.
+Detalle en `reports/PI_report_en.md`.
